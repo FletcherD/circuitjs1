@@ -23,14 +23,23 @@ import com.google.gwt.canvas.dom.client.Context2d;
 
 public class Graphics {
 	
+	float zoom;
+	
 	Context2d context;
 	int currentFontSize;
 	Font currentFont= null;
 	Color lastColor;
 	
-	  public Graphics(Context2d context) {
+	  public Graphics(Context2d context, float zoom) {
 		    this.context = context;
+		    // this fixes the half-pixel alignment issue when drawing to an HTML canvas
+		    this.setZoom(zoom);
 		  }
+	  
+	  public void setZoom(float zoom) {
+		  this.zoom = zoom;
+		  this.context.setTransform(zoom, 0, 0, zoom, 0.5*zoom, 0.5*zoom);		  
+	  }
 	  
 	  public void setColor(Color color) {
 		    if (color != null) {
@@ -49,26 +58,26 @@ public class Graphics {
 	      lastColor=null;
 	  }
 	  
-	  public void fillRect(int x, int y, int width, int height) {
+	  public void fillRect(double x, double y, double width, double height) {
 		//  context.beginPath();
 		  context.fillRect(x, y, width, height);
 		//  context.closePath();
 	  }
 	  
-	  public void drawRect(int x, int y, int width, int height) {
+	  public void drawRect(double x, double y, double width, double height) {
 		//  context.beginPath();
 		  context.strokeRect(x, y, width, height);
 		//  context.closePath();
 	  }
 	  
-	  public void fillOval(int x, int y, int width, int height) {
+	  public void fillOval(double x, double y, double width, double height) {
 		  context.beginPath();
 		  context.arc(x+width/2, y+width/2, width/2, 0, 2.0*3.14159);
 		  context.closePath();
 		  context.fill();
 	  }
 	  
-	  public void drawString(String s, int x, int y){
+	  public void drawString(String s, double x, double y){
 		//  context.beginPath();
 		  context.fillText(s, x, y);
 		//  context.closePath();
@@ -78,7 +87,7 @@ public class Graphics {
 		  context.setLineWidth(width);
 	  }
 	  
-	  public void drawLine(int x1, int y1, int x2, int y2) {
+	  public void drawLine(double x1, double y1, double x2, double y2) {
 		  context.beginPath();
 		  context.moveTo(x1, y1);
 		  context.lineTo(x2, y2);
