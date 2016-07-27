@@ -1,6 +1,6 @@
 /*    
     Copyright (C) Paul Falstad and Iain Sharp
-    
+
     This file is part of CircuitJS1.
 
     CircuitJS1 is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.lushprojects.circuitjs1.client;
 
@@ -44,8 +44,8 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 //import java.text.DecimalFormat;
 
 interface Editable {
-    EditInfo getEditInfo(int n);
-    void setEditValue(int n, EditInfo ei);
+	EditInfo getEditInfo(int n);
+	void setEditValue(int n, EditInfo ei);
 }
 
 // class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
@@ -61,19 +61,19 @@ class EditDialog extends DialogBox  {
 	NumberFormat noCommaFormat;
 
 	EditDialog(Editable ce, CirSim f) {
-//		super(f, "Edit Component", false);
+		//		super(f, "Edit Component", false);
 		super(); // Do we need this?
 		setText("Edit Component");
 		cframe = f;
 		elm = ce;
-//		setLayout(new EditDialogLayout());
+		//		setLayout(new EditDialogLayout());
 		vp=new VerticalPanel();
 		setWidget(vp);
 		einfos = new EditInfo[10];
 		noCommaFormat=NumberFormat.getFormat("####.##########");
-//		noCommaFormat = DecimalFormat.getInstance();
-//		noCommaFormat.setMaximumFractionDigits(10);
-//		noCommaFormat.setGroupingUsed(false);
+		//		noCommaFormat = DecimalFormat.getInstance();
+		//		noCommaFormat.setMaximumFractionDigits(10);
+		//		noCommaFormat.setGroupingUsed(false);
 		hp=new HorizontalPanel();
 		hp.setWidth("100%");
 		hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -102,7 +102,7 @@ class EditDialog extends DialogBox  {
 		buildDialog();
 		this.center();
 	}
-	
+
 	void buildDialog() {
 		int i;
 		int idx;
@@ -124,7 +124,7 @@ class EditDialog extends DialogBox  {
 						itemStateChanged(e);
 					}
 				});
-//				ei.choice.addItemListener(this);
+				//				ei.choice.addItemListener(this);
 			} else if (ei.checkbox != null) {
 				vp.insert(ei.checkbox,idx);
 				ei.checkbox.addValueChangeHandler( new ValueChangeHandler<Boolean>() {
@@ -132,19 +132,19 @@ class EditDialog extends DialogBox  {
 						itemStateChanged(e);
 					}
 				});
-//				ei.checkbox.addItemListener(this);
+				//				ei.checkbox.addItemListener(this);
 			} else {
 				vp.insert(ei.textf =
-					//	new TextBox(unitString(ei), 10));
+						//	new TextBox(unitString(ei), 10));
 						new TextBox(), idx);
 				if (ei.text != null)
 					ei.textf.setText(ei.text);
-//				ei.textf.addActionListener(this);
+				//				ei.textf.addActionListener(this);
 				if (ei.text == null) {
-//					add(ei.bar = new Scrollbar(Scrollbar.HORIZONTAL,
-//							50, 10, 0, barmax+2));
-//					setBar(ei);
-//					ei.bar.addAdjustmentListener(this);
+					//					add(ei.bar = new Scrollbar(Scrollbar.HORIZONTAL,
+					//							50, 10, 0, barmax+2));
+					//					setBar(ei);
+					//					ei.bar.addAdjustmentListener(this);
 					ei.textf.setText(unitString(ei));
 				}
 			}
@@ -204,9 +204,9 @@ class EditDialog extends DialogBox  {
 		int i;
 		for (i = 0; i != einfocount; i++) {
 			EditInfo ei = einfos[i];
-//			if (ei.textf == null)
-//				continue;
-//			if (ei.text == null) {
+			//			if (ei.textf == null)
+			//				continue;
+			//			if (ei.text == null) {
 			if (ei.textf!=null && ei.text==null) {
 				try {
 					double d = parseUnits(ei);
@@ -215,62 +215,62 @@ class EditDialog extends DialogBox  {
 			}
 			elm.setEditValue(i, ei);
 
-//			if (ei.text == null)
-//				setBar(ei);
+			//			if (ei.text == null)
+			//				setBar(ei);
 		}
 		cframe.needAnalyze();
 	}
 
-//	public void actionPerformed(ActionEvent e) {
-//		int i;
-//		Object src = e.getSource();
-//		for (i = 0; i != einfocount; i++) {
-//			EditInfo ei = einfos[i];
-//			if (src == ei.textf) {
-//				if (ei.text == null) {
-//					try {
-//						double d = parseUnits(ei);
-//						ei.value = d;
-//					} catch (Exception ex) { /* ignored */ }
-//				}
-//				elm.setEditValue(i, ei);
-//				if (ei.text == null)
-//					setBar(ei);
-//				cframe.needAnalyze();
-//			}
-//		}
-//		if (e.getSource() == okButton) {
-//			apply();
-//			closeDialog();
-//		}
-//		if (e.getSource() == applyButton)
-//			apply();
-//	}
-//
-//	public void adjustmentValueChanged(AdjustmentEvent e) {
-//		Object src = e.getSource();
-//		int i;
-//		for (i = 0; i != einfocount; i++) {
-//			EditInfo ei = einfos[i];
-//			if (ei.bar == src) {
-//				double v = ei.bar.getValue() / 1000.;
-//				if (v < 0)
-//					v = 0;
-//				if (v > 1)
-//					v = 1;
-//				ei.value = (ei.maxval-ei.minval)*v + ei.minval;
-//				/*if (ei.maxval-ei.minval > 100)
-//		    ei.value = Math.round(ei.value);
-//		else
-//		ei.value = Math.round(ei.value*100)/100.;*/
-//				ei.value = Math.round(ei.value/ei.minval)*ei.minval;
-//				elm.setEditValue(i, ei);
-//				ei.textf.setText(unitString(ei));
-//				cframe.needAnalyze();
-//			}
-//		}
-//	}
-//
+	//	public void actionPerformed(ActionEvent e) {
+	//		int i;
+	//		Object src = e.getSource();
+	//		for (i = 0; i != einfocount; i++) {
+	//			EditInfo ei = einfos[i];
+	//			if (src == ei.textf) {
+	//				if (ei.text == null) {
+	//					try {
+	//						double d = parseUnits(ei);
+	//						ei.value = d;
+	//					} catch (Exception ex) { /* ignored */ }
+	//				}
+	//				elm.setEditValue(i, ei);
+	//				if (ei.text == null)
+	//					setBar(ei);
+	//				cframe.needAnalyze();
+	//			}
+	//		}
+	//		if (e.getSource() == okButton) {
+	//			apply();
+	//			closeDialog();
+	//		}
+	//		if (e.getSource() == applyButton)
+	//			apply();
+	//	}
+	//
+	//	public void adjustmentValueChanged(AdjustmentEvent e) {
+	//		Object src = e.getSource();
+	//		int i;
+	//		for (i = 0; i != einfocount; i++) {
+	//			EditInfo ei = einfos[i];
+	//			if (ei.bar == src) {
+	//				double v = ei.bar.getValue() / 1000.;
+	//				if (v < 0)
+	//					v = 0;
+	//				if (v > 1)
+	//					v = 1;
+	//				ei.value = (ei.maxval-ei.minval)*v + ei.minval;
+	//				/*if (ei.maxval-ei.minval > 100)
+	//		    ei.value = Math.round(ei.value);
+	//		else
+	//		ei.value = Math.round(ei.value*100)/100.;*/
+	//				ei.value = Math.round(ei.value/ei.minval)*ei.minval;
+	//				elm.setEditValue(i, ei);
+	//				ei.textf.setText(unitString(ei));
+	//				cframe.needAnalyze();
+	//			}
+	//		}
+	//	}
+	//
 	public void itemStateChanged(GwtEvent e) {
 		Object src = e.getSource();
 		int i;
@@ -285,39 +285,39 @@ class EditDialog extends DialogBox  {
 			}
 		}
 		if (changed) {
-		//	apply();
-//			setVisible(false);
-//			cframe.editDialog = new EditDialog(elm, cframe);
-//			cframe.editDialog.show();
+			//	apply();
+			//			setVisible(false);
+			//			cframe.editDialog = new EditDialog(elm, cframe);
+			//			cframe.editDialog.show();
 			clearDialog();
 			buildDialog();
 		}
 	}
-	
+
 	public void clearDialog() {
-//		Iterator<Widget> wa = vp.iterator();
-//		while (wa.hasNext()){
-//			Widget w=wa.next();
-//			if (w!=hp)
-//				vp.remove(w);
-//		}
+		//		Iterator<Widget> wa = vp.iterator();
+		//		while (wa.hasNext()){
+		//			Widget w=wa.next();
+		//			if (w!=hp)
+		//				vp.remove(w);
+		//		}
 		while (vp.getWidget(0)!=hp)
 			vp.remove(0);
 	}
-//
-//	public boolean handleEvent(Event ev) {
-//		if (ev.id == Event.WINDOW_DESTROY) {
-//			closeDialog();
-//			return true;
-//		}
-//		return super.handleEvent(ev);
-//	}
-//
-//	void setBar(EditInfo ei) {
-//		int x = (int) (barmax*(ei.value-ei.minval)/(ei.maxval-ei.minval));
-//		ei.bar.setValue(x);
-//	}
-//
+	//
+	//	public boolean handleEvent(Event ev) {
+	//		if (ev.id == Event.WINDOW_DESTROY) {
+	//			closeDialog();
+	//			return true;
+	//		}
+	//		return super.handleEvent(ev);
+	//	}
+	//
+	//	void setBar(EditInfo ei) {
+	//		int x = (int) (barmax*(ei.value-ei.minval)/(ei.maxval-ei.minval));
+	//		ei.bar.setValue(x);
+	//	}
+	//
 	protected void closeDialog()
 	{
 		EditDialog.this.hide();

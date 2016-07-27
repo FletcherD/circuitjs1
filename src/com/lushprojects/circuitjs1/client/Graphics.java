@@ -92,7 +92,6 @@ public class Graphics {
 		  context.moveTo(x1, y1);
 		  context.lineTo(x2, y2);
 		  context.stroke();
-	//	  context.closePath();
 	  }
 	  
 	  public void drawPolyline(int[] xpoints, int[] ypoints, int n) {

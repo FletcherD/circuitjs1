@@ -94,11 +94,8 @@ MouseOutHandler, MouseWheelHandler {
 
 	Random random;
 
-
-
 	public static final int sourceRadius = 7;
 	public static final double freqMult = 3.14159265*2*4;
-
 
 
 	//    public String getAppletInfo() {
@@ -228,8 +225,6 @@ MouseOutHandler, MouseWheelHandler {
 	static AboutBox aboutBox;
 	//    Class dumpTypes[], shortcuts[];
 	String shortcuts[];
-	static String muString = "u";
-	static String ohmString = "ohm";
 	String clipboard;
 	Rectangle circuitArea;
 	int circuitBottom;
@@ -529,20 +524,11 @@ MouseOutHandler, MouseWheelHandler {
 		conventionCheckItem.setState(convention);
 		m.addItem(optionsItem = new CheckboxAlignedMenuItem("Other Options...",
 				new MyCommand("options","other")));
-		/*
 
-	Menu circuitsMenu = new Menu("Circuits");
-	if (useFrame)
-	    mb.add(circuitsMenu);
-	else
-	    mainMenu.add(circuitsMenu);
-		 */
 		mainMenuBar = new MenuBar(true);
 		mainMenuBar.setAutoOpen(true);
 		composeMainMenu(mainMenuBar);
 		composeMainMenu(drawMenuBar);
-
-
 
 		layoutPanel.addNorth(menuBar, MENUBARHEIGHT);
 		layoutPanel.addEast(verticalPanel, VERTICALPANELWIDTH);
@@ -553,8 +539,6 @@ MouseOutHandler, MouseWheelHandler {
 			RootPanel.get().add(new Label("Not working. You need a browser that supports the CANVAS element."));
 			return;
 		}
-
-
 
 		cvcontext=cv.getContext2d();
 		backcv=Canvas.createIfSupported();

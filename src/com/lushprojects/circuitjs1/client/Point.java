@@ -1,6 +1,6 @@
 /*    
     Copyright (C) Paul Falstad and Iain Sharp
-    
+
     This file is part of CircuitJS1.
 
     CircuitJS1 is free software: you can redistribute it and/or modify
@@ -15,31 +15,41 @@
 
     You should have received a copy of the GNU General Public License
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.lushprojects.circuitjs1.client;
 
 public class Point {
 	public int x;
 	public int y;
-	
-	 public Point(int i, int j) {
+
+	public Point(int i, int j) {
 		x=i;
 		y=j;
 	}
-	 
-	 public Point(Point p) {
+
+	public Point(Point p) {
 		x=p.x;
 		y=p.y;
 	}
-	 
-	 public Point() {
-		 x=0;
-		 y=0;
-	 }
-	 
-	 public void setLocation(Point p) {
-		 x=p.x;
-		 y=p.y;
-	 }
+
+	public Point() {
+		x=0;
+		y=0;
+	}
+
+	public void setLocation(Point p) {
+		x=p.x;
+		y=p.y;
+	}
+	
+	public static double distance(Point p1, Point p2) {
+		double x = p1.x-p2.x;
+		double y = p1.y-p2.y;
+		return Math.sqrt(x*x+y*y);
+	}
+	
+	public static Point interpolate(Point p1, Point p2, double ratio) {
+		return new Point((int)(p1.x + (p2.x-p1.x)*ratio), (int)(p1.y + (p2.y-p1.y)*ratio));
+	}
 }

@@ -81,7 +81,7 @@ class ResistorElm extends CircuitElm {
 		}
 		g.context.restore();
 		if (sim.showValuesCheckItem.getState()) {
-			String s = getShortUnitText(resistance, "");
+			String s = getShortUnitText(resistance, "\u03a9");
 			drawValues(g, s, hs + 2);
 		}
 		doDots(g);
@@ -98,7 +98,7 @@ class ResistorElm extends CircuitElm {
 	void getInfo(String arr[]) {
 		arr[0] = "resistor";
 		getBasicInfo(arr);
-		arr[3] = "R = " + getUnitText(resistance, sim.ohmString);
+		arr[3] = "R = " + getUnitText(resistance, "\u03a9");
 		arr[4] = "P = " + getUnitText(getPower(), "W");
 	}
 	public EditInfo getEditInfo(int n) {

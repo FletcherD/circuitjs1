@@ -19,6 +19,8 @@
 
 package com.lushprojects.circuitjs1.client;
 
+import java.util.Arrays;
+
 //import java.awt.*;
 //import java.util.StringTokenizer;
 
@@ -81,8 +83,7 @@ class ZenerElm extends DiodeElm {
 		drawThickLine(g, cathode[0], cathode[1]);
 
 		// draw wings on cathode
-		drawThickLine(g, wing[0], cathode[0]);
-		drawThickLine(g, wing[1], cathode[1]);
+		drawThickLine(g, Arrays.asList(wing[0], cathode[0], cathode[1], wing[1]));
 
 		doDots(g);
 		drawPosts(g);

@@ -166,16 +166,10 @@ public abstract class CircuitElm implements Editable {
 		return p;
 	}
 	void interpPoint(Point a, Point b, Point c, double f) {
-		int xpd = b.x-a.x;
-		int ypd = b.y-a.y;
-		/*double q = (a.x*(1-f)+b.x*f+.48);
-	  System.out.println(q + " " + (int) q);*/
 		c.x = (int) Math.floor(a.x*(1-f)+b.x*f+.48);
 		c.y = (int) Math.floor(a.y*(1-f)+b.y*f+.48);
 	}
 	void interpPoint(Point a, Point b, Point c, double f, double g) {
-		//	int xpd = b.x-a.x;
-		//	int ypd = b.y-a.y;
 		int gx = b.y-a.y;
 		int gy = a.x-b.x;
 		g /= Math.sqrt(gx*gx+gy*gy);
@@ -188,8 +182,6 @@ public abstract class CircuitElm implements Editable {
 		return p;
 	}
 	void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
-		//	int xpd = b.x-a.x;
-		//	int ypd = b.y-a.y;
 		int gx = b.y-a.y;
 		int gy = a.x-b.x;
 		g /= Math.sqrt(gx*gx+gy*gy);
@@ -447,27 +439,11 @@ public abstract class CircuitElm implements Editable {
 			g.drawString(s, xx, yc+dpy+ya);
 		}
 	}
-	void drawCoil(Graphics g, int hs, Point p1, Point p2,
+	void drawCoil(Graphics g, Point p1, Point p2,
 			double v1, double v2) {
 		double len = distance(p1, p2);
-		int segments = 30; // 10*(int) (len/10);
-		int i;
-		double segf = 1./segments;
 
 		ps1.setLocation(p1);
-		/*
-		for (i = 0; i != segments; i++) {
-			double cx = (((i+1)*6.*segf) % 2)-1;
-			double hsx = Math.sqrt(1-cx*cx);
-			if (hsx < 0)
-				hsx = -hsx;
-			interpPoint(p1, p2, ps2, i*segf, hsx*hs);
-			double v = v1+(v2-v1)*i/segments;
-			setVoltageColor(g, v);
-			drawThickLine(g, ps1, ps2);
-			ps1.setLocation(ps2);
-		}
-		 */
 		g.context.save();
 		g.context.setLineWidth(3.0);
 		g.context.transform(((double)(p2.x-p1.x))/len, ((double)(p2.y-p1.y))/len, -((double)(p2.y-p1.y))/len,((double)(p2.x-p1.x))/len,p1.x,p1.y);
@@ -476,29 +452,34 @@ public abstract class CircuitElm implements Editable {
 		grad.addColorStop(1.0, getVoltageColor(g,v2).getHexValue());
 		g.context.setStrokeStyle(grad);
 		g.context.beginPath();
-		g.context.arc(len*0.16667,0,len*0.16667,pi,(hs<0)?0:pi*2.0, hs<0);
-		g.context.arc(len*0.5,0,len*0.16667,pi,pi*2.0);
-		g.context.arc(len*0.83333,0,len*0.16667,pi,pi*2.0);
+		g.context.arc(len / 6.0, 0, len / 6.0, pi, pi*2.0);
+		g.context.arc(len / 2.0, 0, len / 6.0, pi, pi*2.0);
+		g.context.arc(len*5.0 / 6.0, 0, len / 6.0, pi, pi*2.0);
 		g.context.stroke();
 		g.context.restore();
 	}
 	static void drawThickLine(Graphics g, int x, int y, int x2, int y2) {
-		//	g.drawLine(x, y, x2, y2);
-		//	g.drawLine(x+1, y, x2+1, y2);
-		//	g.drawLine(x, y+1, x2, y2+1);
-		//	g.drawLine(x+1, y+1, x2+1, y2+1);
 		g.setLineWidth(3.0);
 		g.drawLine(x,y,x2,y2);
 		g.setLineWidth(1.0);
 	}
 
 	static void drawThickLine(Graphics g, Point pa, Point pb) {
-		//	g.drawLine(pa.x, pa.y, pb.x, pb.y);
-		//	g.drawLine(pa.x+1, pa.y, pb.x+1, pb.y);
-		//	g.drawLine(pa.x, pa.y+1, pb.x, pb.y+1);
-		//	g.drawLine(pa.x+1, pa.y+1, pb.x+1, pb.y+1);
 		g.setLineWidth(3.0);
 		g.drawLine(pa.x, pa.y, pb.x, pb.y);
+		g.setLineWidth(1.0);
+	}
+	
+	static void drawThickLine(Graphics g, java.util.List<Point> points) {
+		g.setLineWidth(3.0);
+		g.context.beginPath();
+		g.context.moveTo(points.get(0).x, points.get(0).y);
+		java.util.ListIterator<Point> it = points.listIterator(1); 
+		while(it.hasNext()) {
+			Point p = it.next();
+			g.context.lineTo(p.x, p.y);
+		}
+		g.context.stroke();
 		g.setLineWidth(1.0);
 	}
 
@@ -546,12 +527,14 @@ public abstract class CircuitElm implements Editable {
 		double va = Math.abs(v);
 		if (va < 1e-14)
 			return "0 " + u;
+		if (va < 1e-12)
+			return s.format(v*1e15) + " f" + u;
 		if (va < 1e-9)
 			return s.format(v*1e12) + " p" + u;
 		if (va < 1e-6)
 			return s.format(v*1e9) + " n" + u;
 		if (va < 1e-3)
-			return s.format(v*1e6) + " " + CirSim.muString + u;
+			return s.format(v*1e6) + " \u03bc" + u; // mu for micro
 		if (va < 1)
 			return s.format(v*1e3) + " m" + u;
 		if (va < 1e3)
@@ -560,7 +543,9 @@ public abstract class CircuitElm implements Editable {
 			return s.format(v*1e-3) + " k" + u;
 		if (va < 1e9)
 			return s.format(v*1e-6) + " M" + u;
-		return s.format(v*1e-9) + " G" + u;
+		if (va < 1e12)
+			return s.format(v*1e-9) + " G" + u;
+		return s.format(v*1e-12) + " T" + u;
 	}
 
 	/*
