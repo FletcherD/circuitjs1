@@ -57,13 +57,11 @@ class CapacitorElm extends CircuitElm {
 		super.setPoints();
 		double f = (dn/2-4)/dn;
 		// calc leads
-		lead1 = interpPoint(point1, point2, f);
-		lead2 = interpPoint(point1, point2, 1-f);
+		lead1 = Point.interpolate(point1, point2, f);
+		lead2 = Point.interpolate(point1, point2, 1-f);
 		// calc plates
-		plate1 = newPointArray(2);
-		plate2 = newPointArray(2);
-		interpPoint2(point1, point2, plate1[0], plate1[1], f, 12);
-		interpPoint2(point1, point2, plate2[0], plate2[1], 1-f, 12);
+		plate1 = Point.getTwoOppositelyShiftedPoints(lead1, point1, point2, 12);
+		plate2 = Point.getTwoOppositelyShiftedPoints(lead2, point1, point2, 12);
 	}
 
 	void draw(Graphics g) {

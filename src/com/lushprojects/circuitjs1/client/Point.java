@@ -20,10 +20,14 @@
 package com.lushprojects.circuitjs1.client;
 
 public class Point {
-	public int x;
-	public int y;
+	public double x;
+	public double y;
 
 	public Point(int i, int j) {
+		x=(double)i;
+		y=(double)j;
+	}
+	public Point(double i, double j) {
 		x=i;
 		y=j;
 	}
@@ -50,6 +54,28 @@ public class Point {
 	}
 	
 	public static Point interpolate(Point p1, Point p2, double ratio) {
-		return new Point((int)(p1.x + (p2.x-p1.x)*ratio), (int)(p1.y + (p2.y-p1.y)*ratio));
+		return new Point(p1.x + (p2.x-p1.x)*ratio, p1.y + (p2.y-p1.y)*ratio);
+	}
+	
+	public static Point shiftSideways(Point toShift, Point endpoint1, Point endpoint2, double shiftDistance) {
+		double gx = endpoint2.y-endpoint1.y;
+		double gy = endpoint1.x-endpoint2.x;
+		shiftDistance /= Math.sqrt(gx*gx+gy*gy);
+		return new Point(toShift.x + shiftDistance*gx, toShift.y + shiftDistance*gy);
+	}
+	
+	public static Point[] getTwoOppositelyShiftedPoints(Point toShift, Point endpoint1, Point endpoint2, double shiftDistance) {
+		Point r[] = new Point[2];
+		r[0] = shiftSideways(toShift, endpoint1, endpoint2,  shiftDistance);
+		r[1] = shiftSideways(toShift, endpoint1, endpoint2, -shiftDistance);
+		return r;
+	}
+	
+	public static Point interpolateAndShift(Point p1, Point p2, double ratio, double shiftDistance) {
+		double gx = p2.y-p1.y;
+		double gy = p1.x-p2.x;
+		shiftDistance /= Math.sqrt(gx*gx+gy*gy);
+		Point c = interpolate(p1, p2, ratio);
+		return shiftSideways(c, p1, p2, shiftDistance);
 	}
 }

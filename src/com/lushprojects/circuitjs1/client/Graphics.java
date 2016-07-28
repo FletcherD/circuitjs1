@@ -30,6 +30,8 @@ public class Graphics {
 	Font currentFont= null;
 	Color lastColor;
 	
+	double[][] curTransformMatrix = new double[3][3];
+	
 	  public Graphics(Context2d context, float zoom) {
 		    this.context = context;
 		    // this fixes the half-pixel alignment issue when drawing to an HTML canvas
@@ -39,6 +41,18 @@ public class Graphics {
 	  public void setZoom(float zoom) {
 		  this.zoom = zoom;
 		  this.context.setTransform(zoom, 0, 0, zoom, 0.5*zoom, 0.5*zoom);		  
+	  }
+	  
+	  public void setDrawArea(double x1, double y1, double x2, double y2) {
+		  
+	  }
+	  
+	  public void resetDrawArea() {
+		  for(int xi = 0; xi != 3; xi++) {
+			  for(int yi = 0; yi != 3; yi++) {
+				  curTransformMatrix[xi][yi] = 1;
+			  }
+		  }
 	  }
 	  
 	  public void setColor(Color color) {
@@ -107,6 +121,18 @@ public class Graphics {
 		  context.stroke();
 	  }
 	
+	  public void drawPolyline(Point[] points) {
+		  int i;
+		  context.beginPath();
+		  for (i=0; i<points.length;i++){
+			  if (i==0)
+				  context.moveTo(points[i].x, points[i].y);
+			  else
+				  context.lineTo(points[i].x, points[i].y);
+		  }
+		  context.closePath();
+		  context.stroke();		  
+	  }
 	  
 	  public void fillPolygon(Polygon p) {
 		  int i;

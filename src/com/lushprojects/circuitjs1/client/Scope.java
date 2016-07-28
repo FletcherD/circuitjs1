@@ -124,9 +124,9 @@ class Scope {
 		resetGraph();
 	}
 
-	int getWidth() { return rect.width; }
+	int getWidth() { return (int)rect.width; }
 
-	int rightEdge() { return rect.x+rect.width; }
+	int rightEdge() { return (int)(rect.x+rect.width); }
 
 	void setElm(CircuitElm ce) {
 		elm = ce;
@@ -320,7 +320,7 @@ class Scope {
 		double multa[] = {2.0, 2.5, 2.0};
 		int multptr=0;
 		int x = 0;
-		int maxy = (rect.height-1)/2;
+		int maxy = (int)((rect.height-1)/2);
 		int y = maxy;
 
 		boolean gotI = false;
@@ -334,7 +334,7 @@ class Scope {
 		String voltColor = (value > 0) ? "#FFFFFF" : "#00FF00";
 		if (sim.scopeSelected == -1 && elm.isMouseElm())
 			curColor = voltColor = "#00FFFF";
-		int ipa = ptr+scopePointCount-rect.width;
+		int ipa = (int)(ptr+scopePointCount-rect.width);
 		for (i = 0; i != rect.width; i++) {
 			int ip = (i+ipa) & (scopePointCount-1);
 			while (maxV[ip] > minMaxV)
@@ -580,7 +580,7 @@ class Scope {
 		}
 		if (showMin) {
 			//	int ym = r.y+r.height-5;
-			int ym=rect.height-5;
+			int ym = (int)(rect.height-5);
 			if (value != 0)
 				g.drawString(elm.getUnitText(realMinV,
 						elm.getScopeUnits(value)),
@@ -717,8 +717,8 @@ class Scope {
 		if (imageCanvas != null) {
 			imageCanvas.setWidth(rect.width + "PX");
 			imageCanvas.setHeight(rect.height + "PX");
-			imageCanvas.setCoordinateSpaceWidth(rect.width);
-			imageCanvas.setCoordinateSpaceHeight(rect.height);
+			imageCanvas.setCoordinateSpaceWidth((int)rect.width);
+			imageCanvas.setCoordinateSpaceHeight((int)rect.height);
 			clear2dView();
 		}
 	}

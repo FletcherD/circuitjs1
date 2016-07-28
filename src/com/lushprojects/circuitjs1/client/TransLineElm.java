@@ -53,8 +53,8 @@ class TransLineElm extends CircuitElm {
 	void drag(int xx, int yy) {
 		xx = sim.snapGrid(xx);
 		yy = sim.snapGrid(yy);
-		int w1 = max(sim.gridSize, abs(yy-y));
-		int w2 = max(sim.gridSize, abs(xx-x));
+		int w1 = Math.max(sim.gridSize, Math.abs(yy-y));
+		int w2 = Math.max(sim.gridSize, Math.abs(xx-x));
 		if (w1 > w2) {
 			xx = x;
 			width = w2;

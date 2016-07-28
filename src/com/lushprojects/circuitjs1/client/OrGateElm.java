@@ -40,7 +40,7 @@ class OrGateElm extends GateElm {
 		int i;
 		for (i = 0; i != 16; i++) {
 			double a = i/16.;
-			double b = 1-a*a;
+			double b = 1;//-a*a;
 			interpPoint2(lead1, lead2,
 					triPoints[i], triPoints[32-i],
 					.5+a/2, b*hs2);
@@ -66,13 +66,14 @@ class OrGateElm extends GateElm {
 		super.draw(g);
 		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
 		//drawThickPolygon(g, gatePoly);
-		Point center = Point.interpolate(point1, point2, 0.5);
-		
+		//Point center = Point.interpolate(point1, point2, 0.5);
+
 		g.context.save();
-		g.context.translate(center.x, center.y);
+		//g.context.translate(center.x, center.y);
 		g.context.beginPath();
-		g.context.moveTo(0, 0);
-		g.context.lineTo(40, 0);
+		//g.context.moveTo(lead1.x, lead1.y + hs2);
+		//g.context.arcTo(x1, y1, x2, y2, radius);
+		g.context.lineTo(lead2.x, lead2.y);
 		g.context.stroke();
 		g.context.restore();
 	}

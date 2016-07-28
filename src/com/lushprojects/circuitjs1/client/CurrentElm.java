@@ -59,7 +59,7 @@ class CurrentElm extends CircuitElm {
 		setVoltageColor(g, (volts[0]+volts[1])/2);
 		setPowerColor(g, false);
 
-		drawThickCircle(g, center.x, center.y, cr);
+		drawThickCircle(g, center, cr);
 		drawThickLine(g, ashaft1, ashaft2);
 
 		g.fillPolygon(arrow);

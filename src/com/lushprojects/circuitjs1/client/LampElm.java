@@ -106,7 +106,7 @@ class LampElm extends CircuitElm {
 		g.setColor(getTempColor());
 		g.fillOval(bulb.x-bulbR, bulb.y-bulbR, bulbR*2, bulbR*2);
 		g.setColor(Color.white);
-		drawThickCircle(g, bulb.x, bulb.y, bulbR);
+		drawThickCircle(g, bulb, bulbR);
 		setVoltageColor(g, v1);
 		drawThickLine(g, lead1, filament[0]);
 		setVoltageColor(g, v2);

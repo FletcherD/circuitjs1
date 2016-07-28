@@ -109,8 +109,8 @@ public abstract class CircuitElm implements Editable {
 
 	void initBoundingBox() {
 		boundingBox = new Rectangle();
-		boundingBox.setBounds(min(x, x2), min(y, y2),
-				abs(x2-x)+1, abs(y2-y)+1);
+		boundingBox.setBounds(Math.min(x, x2), Math.min(y, y2),
+							Math.abs(x2-x)+1, Math.abs(y2-y)+1);
 	}
 
 	void allocNodes() {
@@ -151,6 +151,7 @@ public abstract class CircuitElm implements Editable {
 		point2 = new Point(x2, y2);
 	}
 
+	// set lead1 and lead2 to points in line with the endpoints, len distance apart.
 	void calcLeads(int len) {
 		if (dn < len || len == 0) {
 			lead1 = point1;
@@ -166,15 +167,15 @@ public abstract class CircuitElm implements Editable {
 		return p;
 	}
 	void interpPoint(Point a, Point b, Point c, double f) {
-		c.x = (int) Math.floor(a.x*(1-f)+b.x*f+.48);
-		c.y = (int) Math.floor(a.y*(1-f)+b.y*f+.48);
+		c.x = (int) Math.floor(a.x*(1-f)+b.x*f);
+		c.y = (int) Math.floor(a.y*(1-f)+b.y*f);
 	}
 	void interpPoint(Point a, Point b, Point c, double f, double g) {
-		int gx = b.y-a.y;
-		int gy = a.x-b.x;
+		double gx = b.y-a.y;
+		double gy = a.x-b.x;
 		g /= Math.sqrt(gx*gx+gy*gy);
-		c.x = (int) Math.floor(a.x*(1-f)+b.x*f+g*gx+.48);
-		c.y = (int) Math.floor(a.y*(1-f)+b.y*f+g*gy+.48);
+		c.x = (int) Math.floor(a.x*(1-f)+b.x*f+g*gx);
+		c.y = (int) Math.floor(a.y*(1-f)+b.y*f+g*gy);
 	}
 	Point interpPoint(Point a, Point b, double f, double g) {
 		Point p = new Point();
@@ -182,13 +183,13 @@ public abstract class CircuitElm implements Editable {
 		return p;
 	}
 	void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
-		int gx = b.y-a.y;
-		int gy = a.x-b.x;
+		double gx = b.y-a.y;
+		double gy = a.x-b.x;
 		g /= Math.sqrt(gx*gx+gy*gy);
-		c.x = (int) Math.floor(a.x*(1-f)+b.x*f+g*gx+.48);
-		c.y = (int) Math.floor(a.y*(1-f)+b.y*f+g*gy+.48);
-		d.x = (int) Math.floor(a.x*(1-f)+b.x*f-g*gx+.48);
-		d.y = (int) Math.floor(a.y*(1-f)+b.y*f-g*gy+.48);
+		c.x = (int) Math.floor(a.x*(1-f)+b.x*f+g*gx);
+		c.y = (int) Math.floor(a.y*(1-f)+b.y*f+g*gy);
+		d.x = (int) Math.floor(a.x*(1-f)+b.x*f-g*gx);
+		d.y = (int) Math.floor(a.y*(1-f)+b.y*f-g*gy);
 	}
 	void draw2Leads(Graphics g) {
 		// draw first lead
@@ -209,8 +210,8 @@ public abstract class CircuitElm implements Editable {
 	void drawDots(Graphics g, Point pa, Point pb, double pos) {
 		if (sim.stoppedCheck.getState() || pos == 0 || !sim.dotsCheckItem.getState())
 			return;
-		int dx = pb.x-pa.x;
-		int dy = pb.y-pa.y;
+		double dx = pb.x-pa.x;
+		double dy = pb.y-pa.y;
 		double dn = Math.sqrt(dx*dx+dy*dy);
 		g.setColor(sim.conventionCheckItem.getState()?Color.yellow:Color.cyan);
 		int ds = 16;
@@ -229,8 +230,8 @@ public abstract class CircuitElm implements Editable {
 		Polygon poly = new Polygon();
 		Point p1 = new Point();
 		Point p2 = new Point();
-		int adx = b.x-a.x;
-		int ady = b.y-a.y;
+		double adx = b.x-a.x;
+		double ady = b.y-a.y;
 		double l = Math.sqrt(adx*adx+ady*ady);
 		poly.addPoint(b.x, b.y);
 		interpPoint2(a, b, p1, p2, 1-al/l, aw);
@@ -346,7 +347,7 @@ public abstract class CircuitElm implements Editable {
 	Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? point2 : null;
 	}
-	void drawPost(Graphics g, int x0, int y0, int n) {
+	void drawPost(Graphics g, double x0, double y0, int n) {
 		if (sim.dragElm == null && !needsHighlight() &&
 				sim.getCircuitNode(n).links.size() == 2)
 			return;
@@ -355,30 +356,30 @@ public abstract class CircuitElm implements Editable {
 			return;
 		drawPost(g, x0, y0);
 	}
-	void drawPost(Graphics g, int x0, int y0) {
+	void drawPost(Graphics g, double x0, double y0) {
 		g.setColor(whiteColor);
 		g.fillOval(x0-3.5, y0-3.5, 7, 7);
 	}
-	void setBbox(int x1, int y1, int x2, int y2) {
-		if (x1 > x2) { int q = x1; x1 = x2; x2 = q; }
-		if (y1 > y2) { int q = y1; y1 = y2; y2 = q; }
+	void setBbox(double x1, double y1, double x2, double y2) {
+		if (x1 > x2) { double q = x1; x1 = x2; x2 = q; }
+		if (y1 > y2) { double q = y1; y1 = y2; y2 = q; }
 		boundingBox.setBounds(x1, y1, x2-x1+1, y2-y1+1);
 	}
 	void setBbox(Point p1, Point p2, double w) {
 		setBbox(p1.x, p1.y, p2.x, p2.y);
-		int gx = p2.y-p1.y;
-		int gy = p1.x-p2.x;
-		int dpx = (int) (dpx1*w);
-		int dpy = (int) (dpy1*w);
+		double gx = p2.y-p1.y;
+		double gy = p1.x-p2.x;
+		double dpx = (dpx1*w);
+		double dpy = (dpy1*w);
 		adjustBbox(p1.x+dpx, p1.y+dpy, p1.x-dpx, p1.y-dpy);
 	}
-	void adjustBbox(int x1, int y1, int x2, int y2) {
-		if (x1 > x2) { int q = x1; x1 = x2; x2 = q; }
-		if (y1 > y2) { int q = y1; y1 = y2; y2 = q; }
-		x1 = min(boundingBox.x, x1);
-		y1 = min(boundingBox.y, y1);
-		x2 = max(boundingBox.x+boundingBox.width-1,  x2);
-		y2 = max(boundingBox.y+boundingBox.height-1, y2);
+	void adjustBbox(double x1, double y1, double x2, double y2) {
+		if (x1 > x2) { double q = x1; x1 = x2; x2 = q; }
+		if (y1 > y2) { double q = y1; y1 = y2; y2 = q; }
+		x1 = Math.min(boundingBox.x, x1);
+		y1 = Math.min(boundingBox.y, y1);
+		x2 = Math.max(boundingBox.x+boundingBox.width-1,  x2);
+		y2 = Math.max(boundingBox.y+boundingBox.height-1, y2);
 		boundingBox.setBounds(x1, y1, x2-x1, y2-y1);
 	}
 	void adjustBbox(Point p1, Point p2) {
@@ -386,7 +387,7 @@ public abstract class CircuitElm implements Editable {
 	}
 	boolean isCenteredText() { return false; }
 
-	void drawCenteredText(Graphics g, String s, int x, int y, boolean cx) {
+	void drawCenteredText(Graphics g, String s, double x, double y, boolean cx) {
 		// FontMetrics fm = g.getFontMetrics();
 		//int w = fm.stringWidth(s);
 		//    	int w=0;
@@ -419,7 +420,7 @@ public abstract class CircuitElm implements Editable {
 		//FontMetrics fm = g.getFontMetrics();
 		int w = (int)g.context.measureText(s).getWidth();
 		g.setColor(whiteColor);
-		int ya = (int)g.currentFontSize/2;
+		int ya = (int)g.currentFontSize/4;
 		int xc, yc;
 		if (this instanceof RailElm || this instanceof SweepElm) {
 			xc = x2;
@@ -431,17 +432,17 @@ public abstract class CircuitElm implements Editable {
 		int dpx = (int) (dpx1*hs);
 		int dpy = (int) (dpy1*hs);
 		if (dpx == 0) {
-			g.drawString(s, xc-w/2, yc-abs(dpy)-2);
+			g.drawString(s, xc-w/2, yc-Math.abs(dpy)-4);
 		} else {
-			int xx = xc+abs(dpx)+2;
+			int xx = xc+Math.abs(dpx)+2;
 			if (this instanceof VoltageElm || (x < x2 && y > y2))
-				xx = xc-(w+abs(dpx)+2);
+				xx = xc-(w+Math.abs(dpx)+2);
 			g.drawString(s, xx, yc+dpy+ya);
 		}
 	}
 	void drawCoil(Graphics g, Point p1, Point p2,
 			double v1, double v2) {
-		double len = distance(p1, p2);
+		double len = Point.distance(p1, p2);
 
 		ps1.setLocation(p1);
 		g.context.save();
@@ -458,7 +459,7 @@ public abstract class CircuitElm implements Editable {
 		g.context.stroke();
 		g.context.restore();
 	}
-	static void drawThickLine(Graphics g, int x, int y, int x2, int y2) {
+	static void drawThickLine(Graphics g, double x, double y, double x2, double y2) {
 		g.setLineWidth(3.0);
 		g.drawLine(x,y,x2,y2);
 		g.setLineWidth(1.0);
@@ -483,7 +484,7 @@ public abstract class CircuitElm implements Editable {
 		g.setLineWidth(1.0);
 	}
 
-	static void drawThickPolygon(Graphics g, int xs[], int ys[], int c) {
+	static void drawThickPolygon(Graphics g, double xs[], double ys[], int c) {
 		int i;
 		for (i = 0; i != c-1; i++)
 			drawThickLine(g, xs[i], ys[i], xs[i+1], ys[i+1]);
@@ -494,10 +495,10 @@ public abstract class CircuitElm implements Editable {
 		drawThickPolygon(g, p.xpoints, p.ypoints, p.npoints);
 	}
 
-	static void drawThickCircle(Graphics g, int cx, int cy, int ri) {
+	static void drawThickCircle(Graphics g, Point center, double radius) {
 		g.setLineWidth(3.0);
 		g.context.beginPath();
-		g.context.arc(cx, cy, ri*0.98, 0, 2*pi);
+		g.context.arc(center.x, center.y, radius, 0, 2*pi);
 		g.context.stroke();
 	}
 
@@ -707,15 +708,7 @@ public abstract class CircuitElm implements Editable {
 	void selectRect(Rectangle r) {
 		selected = r.intersects(boundingBox);
 	}
-	static int abs(int x) { return x < 0 ? -x : x; }
 	static int sign(int x) { return (x < 0) ? -1 : (x == 0) ? 0 : 1; }
-	static int min(int a, int b) { return (a < b) ? a : b; }
-	static int max(int a, int b) { return (a > b) ? a : b; }
-	static double distance(Point p1, Point p2) {
-		double x = p1.x-p2.x;
-		double y = p1.y-p2.y;
-		return Math.sqrt(x*x+y*y);
-	}
 	Rectangle getBoundingBox() { return boundingBox; }
 	boolean needsShortcut() { return getShortcut() > 0; }
 	int getShortcut() { return 0; }

@@ -41,7 +41,7 @@ class TransformerElm extends CircuitElm {
 	public TransformerElm(int xa, int ya, int xb, int yb, int f,
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		width = max(32, abs(yb-ya));
+		width = Math.max(32, Math.abs(yb-ya));
 		inductance = new Double(st.nextToken()).doubleValue();
 		ratio = new Double(st.nextToken()).doubleValue();
 		current  = new double[2];
@@ -57,7 +57,7 @@ class TransformerElm extends CircuitElm {
 	void drag(int xx, int yy) {
 		xx = sim.snapGrid(xx);
 		yy = sim.snapGrid(yy);
-		width = max(32, abs(yy-y));
+		width = Math.max(32, Math.abs(yy-y));
 		if (xx == x)
 			yy = y;
 		x2 = xx; y2 = yy;

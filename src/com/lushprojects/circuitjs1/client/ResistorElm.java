@@ -57,7 +57,7 @@ class ResistorElm extends CircuitElm {
 		draw2Leads(g);
 		setPowerColor(g, true);
 		//   double segf = 1./segments;
-		double len = distance(lead1, lead2);
+		double len = Point.distance(lead1, lead2);
 		g.context.save();
 		g.context.setLineWidth(3.0);
 		g.context.transform(((double)(lead2.x-lead1.x))/len, ((double)(lead2.y-lead1.y))/len, -((double)(lead2.y-lead1.y))/len,((double)(lead2.x-lead1.x))/len,lead1.x,lead1.y);

@@ -152,12 +152,12 @@ class VoltageElm extends CircuitElm {
 	void drawWaveform(Graphics g, Point center) {
 		g.setColor(needsHighlight() ? selectColor : Color.gray);
 		setPowerColor(g, false);
-		int xc = center.x; int yc = center.y;
-		drawThickCircle(g, xc, yc, circleSize);
+		double xc = center.x; double yc = center.y;
+		drawThickCircle(g, center, circleSize);
 		int wl = 8;
 		adjustBbox(xc-circleSize, yc-circleSize,
 				xc+circleSize, yc+circleSize);
-		int xc2;
+		double xc2;
 		switch (waveform) {
 		case WF_DC:
 		{
@@ -165,7 +165,7 @@ class VoltageElm extends CircuitElm {
 		}
 		case WF_SQUARE:
 			xc2 = (int) (wl*2*dutyCycle-wl+xc);
-			xc2 = max(xc-wl+3, min(xc+wl-3, xc2));
+			xc2 = Math.max(xc-wl+3, Math.min(xc+wl-3, xc2));
 			drawThickLine(g, xc-wl, yc-wl, xc-wl, yc   );
 			drawThickLine(g, xc-wl, yc-wl, xc2  , yc-wl);
 			drawThickLine(g, xc2  , yc-wl, xc2  , yc+wl);
@@ -186,7 +186,7 @@ class VoltageElm extends CircuitElm {
 			break;
 		case WF_TRIANGLE:
 		{
-			int xl = 5;
+			double xl = 5;
 			drawThickLine(g, xc-xl*2, yc   , xc-xl, yc-wl);
 			drawThickLine(g, xc-xl, yc-wl, xc, yc);
 			drawThickLine(g, xc   , yc, xc+xl, yc+wl);
@@ -197,9 +197,9 @@ class VoltageElm extends CircuitElm {
 		{
 			int i;
 			int xl = 10;
-			int ox = -1, oy = -1;
+			double ox = -1, oy = -1;
 			for (i = -xl; i <= xl; i++) {
-				int yy = yc+(int) (.95*Math.sin(i*pi/xl)*wl);
+				double yy = yc + (.95*Math.sin(i*pi/xl)*wl);
 				if (ox != -1)
 					drawThickLine(g, ox, oy, xc+i, yy);
 				ox = xc+i; oy = yy;

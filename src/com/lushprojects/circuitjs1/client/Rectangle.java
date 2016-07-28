@@ -19,10 +19,10 @@ package com.lushprojects.circuitjs1.client;
 // Via http://grepcode.com/file_/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/awt/Rectangle.java/?v=source
 
 public class Rectangle {
-	int x;
-	int y;
-	int width;
-	int height;
+	double x;
+	double y;
+	double width;
+	double height;
 	
 	public Rectangle(){
 		x=0;
@@ -31,7 +31,7 @@ public class Rectangle {
 		height=0;
 	}
 	
-    public Rectangle(int x, int y, int width, int height) {
+    public Rectangle(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -42,7 +42,7 @@ public class Rectangle {
         this(r.x, r.y, r.width, r.height);
     }
     
-    public void setBounds(int x, int y, int width, int height) {
+    public void setBounds(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -51,15 +51,15 @@ public class Rectangle {
     
     
     public boolean contains(int X, int Y) {
-        int w = this.width;
-        int h = this.height;
-        if ((w | h) < 0) {
+    	double w = this.width;
+    	double h = this.height;
+        if (w < 0 || h < 0) {
             // At least one of the dimensions is negative...
             return false;
         }
         // Note: if either dimension is zero, tests below must return false...
-        int x = this.x;
-        int y = this.y;
+        double x = this.x;
+        double y = this.y;
         if (X < x || Y < y) {
             return false;
         }
@@ -76,17 +76,17 @@ public class Rectangle {
     }
     
     public boolean intersects(Rectangle r) {
-        int tw = this.width;
-        int th = this.height;
-        int rw = r.width;
-        int rh = r.height;
+    	double tw = this.width;
+    	double th = this.height;
+    	double rw = r.width;
+    	double rh = r.height;
         if (rw <= 0 || rh <= 0 || tw <= 0 || th <= 0) {
             return false;
         }
-        int tx = this.x;
-        int ty = this.y;
-        int rx = r.x;
-        int ry = r.y;
+        double tx = this.x;
+        double ty = this.y;
+        double rx = r.x;
+        double ry = r.y;
         rw += rx;
         rh += ry;
         tw += tx;
@@ -99,9 +99,9 @@ public class Rectangle {
     }
     
     public Rectangle union(Rectangle r) {
-        long tx2 = this.width;
-        long ty2 = this.height;
-        if ((tx2 | ty2) < 0) {
+    	double tx2 = this.width;
+        double ty2 = this.height;
+        if (tx2 < 0 | ty2 < 0) {
             // This rectangle has negative dimensions...
             // If r has non-negative dimensions then it is the answer.
             // If r is non-existant (has a negative dimension), then both
@@ -110,17 +110,17 @@ public class Rectangle {
             // Either way, r is our answer.
             return new Rectangle(r);
         }
-        long rx2 = r.width;
-        long ry2 = r.height;
-        if ((rx2 | ry2) < 0) {
+        double rx2 = r.width;
+        double ry2 = r.height;
+        if (rx2 < 0 | ry2 < 0) {
             return new Rectangle(this);
         }
-        int tx1 = this.x;
-        int ty1 = this.y;
+        double tx1 = this.x;
+        double ty1 = this.y;
         tx2 += tx1;
         ty2 += ty1;
-        int rx1 = r.x;
-        int ry1 = r.y;
+        double rx1 = r.x;
+        double ry1 = r.y;
         rx2 += rx1;
         ry2 += ry1;
         if (tx1 > rx1) tx1 = rx1;

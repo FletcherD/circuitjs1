@@ -353,7 +353,7 @@ MouseOutHandler, MouseWheelHandler {
 			//			pause = Integer.parseInt(param);
 			startCircuit = qp.getValue("startCircuit");
 			startLabel   = qp.getValue("startLabel");
-			euro = qp.getBooleanValue("euroResistors", true);
+			euro = qp.getBooleanValue("euroResistors", false);
 			//		useFrameStr  = qp.getValue("useFrame");
 			//		String x = applet.getParameter("whiteBackground");
 			//		if (x != null && x.equalsIgnoreCase("true"))
@@ -1030,8 +1030,8 @@ MouseOutHandler, MouseWheelHandler {
 			maxy = max(ce.y, max(ce.y2, maxy));
 		}
 		// center circuit; we don't use snapGrid() because that rounds
-		int dx = gridMask & ((circuitArea.width -(maxx-minx))/2-minx);
-		int dy = gridMask & ((circuitArea.height-(maxy-miny))/2-miny);
+		int dx = gridMask & (int)((circuitArea.width -(maxx-minx))/2-minx);
+		int dy = gridMask & (int)((circuitArea.height-(maxy-miny))/2-miny);
 		if (dx+minx < 0)
 			dx = gridMask & (-minx);
 		if (dy+miny < 0)
@@ -1271,8 +1271,8 @@ MouseOutHandler, MouseWheelHandler {
 			// find where to show data; below circuit, not too high unless we need it
 			// int ybase = winSize.height-15*i-5;
 			int ybase = cv.getCoordinateSpaceHeight() -15*i-5;
-			ybase = min(ybase, circuitArea.height);
-			ybase = max(ybase, circuitBottom);
+			ybase = Math.min(ybase, (int)circuitArea.height);
+			ybase = Math.max(ybase, circuitBottom);
 			for (i = 0; info[i] != null; i++)
 				g.drawString(info[i], x,
 						ybase+15*(i+1));
@@ -1338,7 +1338,7 @@ MouseOutHandler, MouseWheelHandler {
 		}
 		while (scopeCount > 0 && scopes[scopeCount-1].elm == null)
 			scopeCount--;
-		int h = cv.getCoordinateSpaceHeight() - Math.round(circuitArea.height * zoom);
+		double h = cv.getCoordinateSpaceHeight() - Math.round(circuitArea.height * zoom);
 		pos = 0;
 		for (i = 0; i != scopeCount; i++)
 			scopeColCount[i] = 0;
@@ -1362,7 +1362,7 @@ MouseOutHandler, MouseWheelHandler {
 			Scope s = scopes[i];
 			if (s.position > pos) {
 				pos = s.position;
-				colh = h / scopeColCount[pos];
+				colh = (int)h / scopeColCount[pos];
 				row = 0;
 				speed = s.speed;
 			}
@@ -1908,7 +1908,7 @@ MouseOutHandler, MouseWheelHandler {
 		circuitBottom = 0;
 		for (i = 0; i != elmList.size(); i++) {
 			Rectangle rect = getElm(i).boundingBox;
-			int bottom = rect.height + rect.y;
+			int bottom = (int)(rect.height + rect.y);
 			if (bottom > circuitBottom)
 				circuitBottom = bottom;
 		}
@@ -3188,13 +3188,13 @@ MouseOutHandler, MouseWheelHandler {
 				CircuitElm ce = getElm(i);
 				if (ce.boundingBox.contains(x, y)) {
 					int j;
-					int area = ce.boundingBox.width * ce.boundingBox.height;
+					int area = (int)(ce.boundingBox.width * ce.boundingBox.height);
 					int jn = ce.getPostCount();
 					if (jn > 2)
 						jn = 2;
 					for (j = 0; j != jn; j++) {
 						Point pt = ce.getPost(j);
-						int dist = distanceSq(x, y, pt.x, pt.y);
+						int dist = (int)distanceSq(x, y, pt.x, pt.y);
 
 						// if multiple elements have overlapping bounding boxes,
 						// we prefer selecting elements that have posts close
@@ -3264,7 +3264,7 @@ MouseOutHandler, MouseWheelHandler {
 		setMouseElm(newMouseElm);
 	}
 
-	int distanceSq(int x1, int y1, int x2, int y2) {
+	double distanceSq(double x1, double y1, double x2, double y2) {
 		x2 -= x1;
 		y2 -= y1;
 		return x2*x2+y2*y2;
@@ -3783,12 +3783,12 @@ MouseOutHandler, MouseWheelHandler {
 		if (oldbb != null && newbb != null && oldbb.intersects(newbb)) {
 			// find a place for new items
 			int dx = 0, dy = 0;
-			int spacew = circuitArea.width - oldbb.width - newbb.width;
-			int spaceh = circuitArea.height - oldbb.height - newbb.height;
+			int spacew = (int)(circuitArea.width - oldbb.width - newbb.width);
+			int spaceh = (int)(circuitArea.height - oldbb.height - newbb.height);
 			if (spacew > spaceh)
-				dx = snapGrid(oldbb.x + oldbb.width  - newbb.x + gridSize);
+				dx = snapGrid((int)(oldbb.x + oldbb.width  - newbb.x + gridSize));
 			else
-				dy = snapGrid(oldbb.y + oldbb.height - newbb.y + gridSize);
+				dy = snapGrid((int)(oldbb.y + oldbb.height - newbb.y + gridSize));
 			for (i = oldsz; i != elmList.size(); i++) {
 				CircuitElm ce = getElm(i);
 				ce.move(dx, dy);

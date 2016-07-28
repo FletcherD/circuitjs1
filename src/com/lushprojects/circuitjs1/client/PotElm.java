@@ -92,20 +92,20 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 	void setPoints() {
 		super.setPoints();
 		int offset = 0;
-		if (abs(dx) > abs(dy)) {
+		if (Math.abs(dx) > Math.abs(dy)) {
 			dx = sim.snapGrid(dx/2)*2;
-			point2.x = x2 = point1.x + dx;
+			point2.x = x2 = (int)point1.x + dx;
 			offset = (dx < 0) ? dy : -dy;
 			point2.y = point1.y;
 		} else {
 			dy = sim.snapGrid(dy/2)*2;
-			point2.y = y2 = point1.y + dy;
+			point2.y = y2 = (int)point1.y + dy;
 			offset = (dy > 0) ? dx : -dx;
 			point2.x = point1.x;
 		}
 		if (offset == 0)
 			offset = sim.gridSize;
-		dn = distance(point1, point2);
+		dn = Point.distance(point1, point2);
 		int bodyLen = 32;
 		calcLeads(bodyLen);
 		position = slider.getValue()*.0099+.005;
@@ -118,7 +118,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 		midpoint = interpPoint(point1, point2, soff/dn+.5);
 		arrow1 = new Point();
 		arrow2 = new Point();
-		double clen = abs(offset)-8;
+		double clen = Math.abs(offset)-8;
 		interpPoint2(corner2, arrowPoint, arrow1, arrow2, (clen-8)/clen, 8);
 		ps3 = new Point();
 		ps4 = new Point();
@@ -186,7 +186,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 			drawDots(g, point2, midpoint, curcount2);
 			drawDots(g, post3, corner2, curcount3);
 			drawDots(g, corner2, midpoint,
-					curcount3+distance(post3, corner2));
+					curcount3 + Point.distance(post3, corner2));
 		}
 		drawPosts(g);
 	}

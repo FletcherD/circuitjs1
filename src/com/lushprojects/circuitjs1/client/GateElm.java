@@ -95,7 +95,7 @@ abstract class GateElm extends CircuitElm {
 			for (i = 0; i != linePoints.length-1; i++)
 				drawThickLine(g, linePoints[i], linePoints[i+1]);
 		if (isInverting())
-			drawThickCircle(g, pcircle.x, pcircle.y, 3);
+			drawThickCircle(g, pcircle, 3);
 		curcount = updateDotCount(current, curcount);
 		drawDots(g, lead2, point2, curcount);
 		drawPosts(g);
@@ -123,7 +123,6 @@ abstract class GateElm extends CircuitElm {
 	}
 	abstract boolean calcFunction();
 	void doStep() {
-		int i;
 		boolean f = calcFunction();
 		if (isInverting())
 			f = !f;
