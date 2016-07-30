@@ -47,6 +47,14 @@ public class Point {
 		y=p.y;
 	}
 	
+	public Point offset(double xDiff, double yDiff) {
+		return new Point(x + xDiff, y + yDiff);
+	}
+	
+	public Point round() {
+		return new Point(Math.round(x), Math.round(y));
+	}
+	
 	public static double distance(Point p1, Point p2) {
 		double x = p1.x-p2.x;
 		double y = p1.y-p2.y;

@@ -42,7 +42,7 @@ public abstract class CircuitElm implements Editable {
 	static Color whiteColor, selectColor, lightGrayColor;
 	static Font unitsFont;
 
-	static NumberFormat showFormat, shortFormat;//, noCommaFormat;
+	static NumberFormat showFormat, shortFormat;
 	static final double pi = 3.14159265358979323846;
 
 	int x, y, x2, y2, flags, nodes[], voltSource;
@@ -158,8 +158,8 @@ public abstract class CircuitElm implements Editable {
 			lead2 = point2;
 			return;
 		}
-		lead1 = interpPoint(point1, point2, (dn-len)/(2*dn));
-		lead2 = interpPoint(point1, point2, (dn+len)/(2*dn));
+		lead1 = Point.interpolate(point1, point2, (dn-len)/(2*dn)).round();
+		lead2 = Point.interpolate(point1, point2, (dn+len)/(2*dn)).round();
 	}
 	Point interpPoint(Point a, Point b, double f) {
 		Point p = new Point();
@@ -440,35 +440,29 @@ public abstract class CircuitElm implements Editable {
 			g.drawString(s, xx, yc+dpy+ya);
 		}
 	}
-	void drawCoil(Graphics g, Point p1, Point p2,
-			double v1, double v2) {
-		double len = Point.distance(p1, p2);
-
-		ps1.setLocation(p1);
-		g.context.save();
+	void drawCoil(Graphics g, Point p1, Point p2, double v1, double v2) {
 		g.context.setLineWidth(3.0);
-		g.context.transform(((double)(p2.x-p1.x))/len, ((double)(p2.y-p1.y))/len, -((double)(p2.y-p1.y))/len,((double)(p2.x-p1.x))/len,p1.x,p1.y);
-		CanvasGradient grad = g.context.createLinearGradient(0,0,len,0);
+		g.context.save();
+		g.setDrawRegionScaled(p1, p2);
+		g.context.beginPath();
+		g.context.arc(1.0 / 6.0, 0, 1.0 / 6.0, pi, pi*2.0);
+		g.context.arc(1.0 / 2.0, 0, 1.0 / 6.0, pi, pi*2.0);
+		g.context.arc(5.0 / 6.0, 0, 1.0 / 6.0, pi, pi*2.0);
+		g.context.restore();
+		CanvasGradient grad = g.context.createLinearGradient(p1.x,p1.y,p2.x,p2.y);
 		grad.addColorStop(0, getVoltageColor(g,v1).getHexValue());
 		grad.addColorStop(1.0, getVoltageColor(g,v2).getHexValue());
 		g.context.setStrokeStyle(grad);
-		g.context.beginPath();
-		g.context.arc(len / 6.0, 0, len / 6.0, pi, pi*2.0);
-		g.context.arc(len / 2.0, 0, len / 6.0, pi, pi*2.0);
-		g.context.arc(len*5.0 / 6.0, 0, len / 6.0, pi, pi*2.0);
 		g.context.stroke();
-		g.context.restore();
 	}
 	static void drawThickLine(Graphics g, double x, double y, double x2, double y2) {
 		g.setLineWidth(3.0);
 		g.drawLine(x,y,x2,y2);
-		g.setLineWidth(1.0);
 	}
 
 	static void drawThickLine(Graphics g, Point pa, Point pb) {
 		g.setLineWidth(3.0);
 		g.drawLine(pa.x, pa.y, pb.x, pb.y);
-		g.setLineWidth(1.0);
 	}
 	
 	static void drawThickLine(Graphics g, java.util.List<Point> points) {
@@ -481,14 +475,17 @@ public abstract class CircuitElm implements Editable {
 			g.context.lineTo(p.x, p.y);
 		}
 		g.context.stroke();
-		g.setLineWidth(1.0);
 	}
 
 	static void drawThickPolygon(Graphics g, double xs[], double ys[], int c) {
-		int i;
-		for (i = 0; i != c-1; i++)
-			drawThickLine(g, xs[i], ys[i], xs[i+1], ys[i+1]);
-		drawThickLine(g, xs[i], ys[i], xs[0], ys[0]);
+		g.setLineWidth(3.0);
+		g.context.beginPath();
+		g.context.moveTo(xs[0], ys[0]);
+		for (int i = 1; i != c; i++)
+			g.context.lineTo(xs[i], ys[i]);
+		g.context.lineTo(xs[0], ys[0]);
+		g.context.closePath();
+		g.context.stroke();
 	}
 
 	static void drawThickPolygon(Graphics g, Polygon p) {

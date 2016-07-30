@@ -28,55 +28,53 @@ class OrGateElm extends GateElm {
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f, st);
 	}
-	String getGateName() { return "OR gate"; }
-	void setPoints() {
-		super.setPoints();
-
-		// 0-15 = top curve, 16 = right, 17-32=bottom curve,
-		// 33-37 = left curve
-		Point triPoints[] = newPointArray(38);
-		if (this instanceof XorGateElm)
-			linePoints = new Point[5];
-		int i;
-		for (i = 0; i != 16; i++) {
-			double a = i/16.;
-			double b = 1;//-a*a;
-			interpPoint2(lead1, lead2,
-					triPoints[i], triPoints[32-i],
-					.5+a/2, b*hs2);
-		}
-		double ww2 = (ww == 0) ? dn*2 : ww*2;
-		for (i = 0; i != 5; i++) {
-			double a = (i-2)/2.;
-			double b = 4*(1-a*a)-2;
-			interpPoint(lead1, lead2,
-					triPoints[33+i], b/(ww2), a*hs2);
-			if (this instanceof XorGateElm)
-				linePoints[i] = interpPoint(lead1, lead2,
-						(b-5)/(ww2), a*hs2);
-		}
-		triPoints[16] = new Point(lead2);
-		if (isInverting()) {
-			pcircle = interpPoint(point1, point2, .5+(ww+4)/dn);
-			lead2 = interpPoint(point1, point2, .5+(ww+8)/dn);
-		}
-		gatePoly = createPolygon(triPoints);
-	}
+	
 	void draw(Graphics g) {
 		super.draw(g);
-		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-		//drawThickPolygon(g, gatePoly);
-		//Point center = Point.interpolate(point1, point2, 0.5);
-
+		g.setLineWidth(3.0);
+		g.setFillColor(Color.black);
+		g.setStrokeColor(needsHighlight() ? selectColor : lightGrayColor);
+		if (this instanceof XorGateElm) {	// draw extra line on back of gate for XOR
+			g.context.save();
+			g.setDrawRegionScaled(lead1, lead2);
+			g.context.scale(1, heightScale);
+			g.context.beginPath();
+			g.context.translate(-0.125,  0);
+			g.context.moveTo(-0.1, -0.5);
+			g.context.arcTo(0.1, 0.0, -0.1, 0.5, 1);	// back curve
+			g.context.lineTo(-0.1, 0.5);
+			g.context.restore();
+			g.context.stroke();		
+		}
 		g.context.save();
-		//g.context.translate(center.x, center.y);
+		g.setDrawRegionScaled(lead1, lead2);
+		g.context.scale(1, heightScale);
 		g.context.beginPath();
-		//g.context.moveTo(lead1.x, lead1.y + hs2);
-		//g.context.arcTo(x1, y1, x2, y2, radius);
-		g.context.lineTo(lead2.x, lead2.y);
-		g.context.stroke();
+		g.context.moveTo(-0.1, -0.5);
+		g.context.arcTo(0.1, 0.0, -0.1, 0.5, 1);	// back curve
+		g.context.lineTo(-0.1, 0.5);
+		g.context.arcTo(0.6, 0.5, 1.0, 0.0, 1.0); // bottom curve
+		g.context.lineTo(1.0, 0.0);
+		g.context.arcTo(0.6, -0.5, 0.4, -0.5, 1.0); // top curve
+		g.context.lineTo(0.0, -0.5);
+		g.context.closePath();
 		g.context.restore();
+		g.context.fill();
+		g.context.stroke();
+		if (isInverting()) {	// draw dot on tip for inverting.
+			g.context.save();
+			g.setDrawRegionScaled(lead1, lead2);
+			double len = Point.distance(lead1, lead2);
+			g.context.beginPath();
+			g.context.arc(1.0 + 4/len, 0.0, 4/len, 0, 2*pi);
+			g.context.closePath();
+			g.context.restore();
+			g.context.fill();
+			g.context.stroke();
+		}
 	}
+
+	String getGateName() { return "OR gate"; }
 	boolean calcFunction() {
 		int i;
 		boolean f = false;

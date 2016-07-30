@@ -42,11 +42,10 @@ abstract class GateElm extends CircuitElm {
 		setSize((f & FLAG_SMALL) != 0 ? 1 : 2);
 	}
 	boolean isInverting() { return false; }
-	int gsize, gwidth, gwidth2, gheight, hs2;
+	int gwidth, gheight;
+	double heightScale;
 	void setSize(int s) {
-		gsize = s;
 		gwidth = 7*s;
-		gwidth2 = 14*s;
 		gheight = 8*s;
 		flags = (s == 1) ? FLAG_SMALL : 0;
 	}
@@ -54,32 +53,28 @@ abstract class GateElm extends CircuitElm {
 		return super.dump() + " " + inputCount + " " + volts[inputCount];
 	}
 	Point inPosts[], inGates[];
-	int ww;
 	void setPoints() {
 		super.setPoints();
 		if (dn > 150 && this == sim.dragElm)
 			setSize(2);
-		int hs = gheight;
-		int i;
-		ww = gwidth2; // was 24
+		int ww = gwidth*2; // was 24
 		if (ww > dn/2)
 			ww = (int) (dn/2);
-		if (isInverting() && ww+8 > dn/2)
-			ww = (int) (dn/2-8);
 		calcLeads(ww*2);
+		//calcLeads(gwidth*4);
 		inPosts = new Point[inputCount];
 		inGates = new Point[inputCount];
 		allocNodes();
 		int i0 = -inputCount/2;
-		for (i = 0; i != inputCount; i++, i0++) {
+		for (int i = 0; i != inputCount; i++, i0++) {
 			if (i0 == 0 && (inputCount & 1) == 0)
 				i0++;
-			inPosts[i] = interpPoint(point1, point2, 0, hs*i0);
-			inGates[i] = interpPoint(lead1,  lead2,  0, hs*i0);
+			inPosts[i] = Point.shiftSideways(point1, point2, point1, gheight*i0);
+			inGates[i] = Point.shiftSideways(lead1,  lead2,  lead1,  gheight*i0);
 			volts[i] = (lastOutput ^ isInverting()) ? 5 : 0;
 		}
-		hs2 = gwidth*(inputCount/2+1);
-		setBbox(point1, point2, hs2);
+		heightScale = (double)(inputCount/2+1) / 2;
+		setBbox(point1, point2, gwidth*(inputCount/2+1));
 	}
 	void draw(Graphics g) {
 		int i;
@@ -89,13 +84,6 @@ abstract class GateElm extends CircuitElm {
 		}
 		setVoltageColor(g, volts[inputCount]);
 		drawThickLine(g, lead2, point2);
-		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-		//drawThickPolygon(g, gatePoly);
-		if (linePoints != null)
-			for (i = 0; i != linePoints.length-1; i++)
-				drawThickLine(g, linePoints[i], linePoints[i+1]);
-		if (isInverting())
-			drawThickCircle(g, pcircle, 3);
 		curcount = updateDotCount(current, curcount);
 		drawDots(g, lead2, point2, curcount);
 		drawPosts(g);
