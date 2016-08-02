@@ -57,7 +57,7 @@ abstract class GateElm extends CircuitElm {
 		super.setPoints();
 		if (dn > 150 && this == sim.dragElm)
 			setSize(2);
-		int ww = gwidth*2; // was 24
+		int ww = gwidth*2;
 		if (ww > dn/2)
 			ww = (int) (dn/2);
 		calcLeads(ww*2);
