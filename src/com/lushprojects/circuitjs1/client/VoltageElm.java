@@ -61,7 +61,7 @@ class VoltageElm extends CircuitElm {
 		}
 		if ((flags & FLAG_COS) != 0) {
 			flags &= ~FLAG_COS;
-			phaseShift = pi/2;
+			phaseShift = Math.PI/2;
 		}
 		reset();
 	}
@@ -81,9 +81,9 @@ class VoltageElm extends CircuitElm {
 		curcount = 0;
 	}
 	double triangleFunc(double x) {
-		if (x < pi)
-			return x*(2/pi)-1;
-		return 1-(x-pi)*(2/pi);
+		if (x < Math.PI)
+			return x*(2/Math.PI)-1;
+		return 1-(x-Math.PI)*(2/Math.PI);
 	}
 	void stamp() {
 		if (waveform == WF_DC)
@@ -98,19 +98,19 @@ class VoltageElm extends CircuitElm {
 					getVoltage());
 	}
 	double getVoltage() {
-		double w = 2*pi*(sim.t-freqTimeZero)*frequency + phaseShift;
+		double w = 2*Math.PI*(sim.t-freqTimeZero)*frequency + phaseShift;
 		switch (waveform) {
 		case WF_DC: return maxVoltage+bias;
 		case WF_AC: return Math.sin(w)*maxVoltage+bias;
 		case WF_SQUARE:
-			return bias+((w % (2*pi) > (2*pi*dutyCycle)) ?
+			return bias+((w % (2*Math.PI) > (2*Math.PI*dutyCycle)) ?
 					-maxVoltage : maxVoltage);
 		case WF_TRIANGLE:
-			return bias+triangleFunc(w % (2*pi))*maxVoltage;
+			return bias+triangleFunc(w % (2*Math.PI))*maxVoltage;
 		case WF_SAWTOOTH:
-			return bias+(w % (2*pi))*(maxVoltage/pi)-maxVoltage;
+			return bias+(w % (2*Math.PI))*(maxVoltage/Math.PI)-maxVoltage;
 		case WF_PULSE:
-			return ((w % (2*pi)) < 1) ? maxVoltage+bias : bias;
+			return ((w % (2*Math.PI)) < 1) ? maxVoltage+bias : bias;
 		default: return 0;
 		}
 	}
@@ -158,6 +158,7 @@ class VoltageElm extends CircuitElm {
 		adjustBbox(xc-circleSize, yc-circleSize,
 				xc+circleSize, yc+circleSize);
 		double xc2;
+		g.setLineWidth(3.0);
 		switch (waveform) {
 		case WF_DC:
 		{
@@ -166,44 +167,54 @@ class VoltageElm extends CircuitElm {
 		case WF_SQUARE:
 			xc2 = (int) (wl*2*dutyCycle-wl+xc);
 			xc2 = Math.max(xc-wl+3, Math.min(xc+wl-3, xc2));
-			drawThickLine(g, xc-wl, yc-wl, xc-wl, yc   );
-			drawThickLine(g, xc-wl, yc-wl, xc2  , yc-wl);
-			drawThickLine(g, xc2  , yc-wl, xc2  , yc+wl);
-			drawThickLine(g, xc+wl, yc+wl, xc2  , yc+wl);
-			drawThickLine(g, xc+wl, yc   , xc+wl, yc+wl);
+			g.context.beginPath();
+			g.context.lineTo(xc-wl, yc);
+			g.context.lineTo(xc-wl, yc-wl);
+			g.context.lineTo(xc2  , yc-wl);
+			g.context.lineTo(xc2  , yc+wl);
+			g.context.lineTo(xc+wl, yc+wl);
+			g.context.lineTo(xc+wl, yc);
+			g.context.stroke();
 			break;
 		case WF_PULSE:
 			yc += wl/2;
-			drawThickLine(g, xc-wl, yc-wl, xc-wl, yc   );
-			drawThickLine(g, xc-wl, yc-wl, xc-wl/2, yc-wl);
-			drawThickLine(g, xc-wl/2, yc-wl, xc-wl/2, yc);
-			drawThickLine(g, xc-wl/2, yc, xc+wl, yc);
+			g.context.beginPath();
+			g.context.lineTo(xc-wl  , yc);
+			g.context.lineTo(xc-wl  , yc-wl);
+			g.context.lineTo(xc-wl/2, yc-wl);
+			g.context.lineTo(xc-wl/2, yc);
+			g.context.lineTo(xc+wl  , yc);
+			g.context.stroke();
 			break;
 		case WF_SAWTOOTH:
-			drawThickLine(g, xc   , yc-wl, xc-wl, yc   );
-			drawThickLine(g, xc   , yc-wl, xc   , yc+wl);
-			drawThickLine(g, xc   , yc+wl, xc+wl, yc   );
+			g.context.beginPath();
+			g.context.lineTo(xc-wl, yc);
+			g.context.lineTo(xc   , yc-wl);
+			g.context.lineTo(xc   , yc+wl);
+			g.context.lineTo(xc+wl, yc);
+			g.context.stroke();
 			break;
 		case WF_TRIANGLE:
 		{
 			double xl = 5;
-			drawThickLine(g, xc-xl*2, yc   , xc-xl, yc-wl);
-			drawThickLine(g, xc-xl, yc-wl, xc, yc);
-			drawThickLine(g, xc   , yc, xc+xl, yc+wl);
-			drawThickLine(g, xc+xl, yc+wl, xc+xl*2, yc);
+			g.context.beginPath();
+			g.context.lineTo(xc-xl*2, yc);
+			g.context.lineTo(xc-xl  , yc-wl);
+			g.context.lineTo(xc     , yc);
+			g.context.lineTo(xc+xl  , yc+wl);
+			g.context.lineTo(xc+xl*2, yc);
+			g.context.stroke();
 			break;
 		}
 		case WF_AC:
 		{
-			int i;
 			int xl = 10;
-			double ox = -1, oy = -1;
-			for (i = -xl; i <= xl; i++) {
-				double yy = yc + (.95*Math.sin(i*pi/xl)*wl);
-				if (ox != -1)
-					drawThickLine(g, ox, oy, xc+i, yy);
-				ox = xc+i; oy = yy;
+			g.context.beginPath();
+			for (int i = -xl; i <= xl; i++) {
+				double yy = yc + (.95*Math.sin(i*Math.PI/xl)*wl);
+				g.context.lineTo(xc+i, yy);
 			}
+			g.context.stroke();
 			break;
 		}
 		}
@@ -267,7 +278,7 @@ class VoltageElm extends CircuitElm {
 		if (n == 3)
 			return new EditInfo("DC Offset (V)", bias, -20, 20);
 		if (n == 4)
-			return new EditInfo("Phase Offset (degrees)", phaseShift*180/pi,
+			return new EditInfo("Phase Offset (degrees)", phaseShift*180/Math.PI,
 					-180, 180).setDimensionless();
 		if (n == 5 && waveform == WF_SQUARE)
 			return new EditInfo("Duty Cycle", dutyCycle*100, 0, 100).
@@ -305,7 +316,7 @@ class VoltageElm extends CircuitElm {
 			setPoints();
 		}
 		if (n == 4)
-			phaseShift = ei.value*pi/180;
+			phaseShift = ei.value*Math.PI/180;
 		if (n == 5)
 			dutyCycle = ei.value*.01;
 	}

@@ -64,10 +64,9 @@ class SweepElm extends CircuitElm {
 		drawThickCircle(g, point2, circleSize);
 		int wl = 8;
 		adjustBbox(point2.x-circleSize, point2.y-circleSize,
-					point2.x+circleSize, point2.y+circleSize);
+				point2.x+circleSize, point2.y+circleSize);
 		int i;
 		int xl = 10;
-		double ox = -1, oy = -1;
 		long tm = System.currentTimeMillis();
 		//double w = (this == mouseElm ? 3 : 2);
 		tm %= 2000;
@@ -76,12 +75,13 @@ class SweepElm extends CircuitElm {
 		double w = 1+tm*.002;
 		if (!sim.stoppedCheck.getState())
 			w = 1+2*(frequency-minF)/(maxF-minF);
+		g.setLineWidth(3.0);
+		g.context.beginPath();
 		for (i = -xl; i <= xl; i++) {
-			double yy = point2.y + (.95*Math.sin(i*pi*w/xl)*wl);
-			if (ox != -1)
-				drawThickLine(g, ox, oy, point2.x+i, yy);
-			ox = point2.x+i; oy = yy;
+			double yy = point2.y + (.95*Math.sin(i*Math.PI*w/xl)*wl);
+			g.context.lineTo(point2.x+i, yy);
 		}
+		g.context.stroke();
 		if (sim.showValuesCheckItem.getState()) {
 			String s = getShortUnitText(frequency, "Hz");
 			if (dx == 0 || dy == 0)
@@ -126,8 +126,8 @@ class SweepElm extends CircuitElm {
 		if (sim.timeStep != savedTimeStep)
 			setParams();
 		v = Math.sin(freqTime)*maxV;
-		freqTime += frequency*2*pi*sim.timeStep;
-		frequency = frequency*fmul+fadd;
+		freqTime += frequency * 2 * Math.PI * sim.timeStep;
+		frequency = frequency * fmul + fadd;
 		if (frequency >= maxF && dir == 1) {
 			if ((flags & FLAG_BIDIR) != 0) {
 				fadd = -fadd;

@@ -43,7 +43,6 @@ public abstract class CircuitElm implements Editable {
 	static Font unitsFont;
 
 	static NumberFormat showFormat, shortFormat;
-	static final double pi = 3.14159265358979323846;
 
 	int x, y, x2, y2, flags, nodes[], voltSource;
 	int dx, dy, dsign;
@@ -441,13 +440,29 @@ public abstract class CircuitElm implements Editable {
 		}
 	}
 	void drawCoil(Graphics g, Point p1, Point p2, double v1, double v2) {
+		int numLoops = 3;
+		double extraAngle = 0;//Math.PI / 4.0;
+		
+		double totalLength = 0;
+		totalLength += (1.0 + Math.cos(extraAngle));
+		for(int i = 1; i < numLoops-1; i++) {
+			totalLength += 2.0 * Math.cos(extraAngle);
+		}
+		totalLength += (1.0 + Math.cos(extraAngle));
+		double loopRadius = 1.0 / totalLength;
+		double loopPosition = loopRadius;
+		
 		g.context.setLineWidth(3.0);
 		g.context.save();
 		g.setDrawRegionScaled(p1, p2);
 		g.context.beginPath();
-		g.context.arc(1.0 / 6.0, 0, 1.0 / 6.0, pi, pi*2.0);
-		g.context.arc(1.0 / 2.0, 0, 1.0 / 6.0, pi, pi*2.0);
-		g.context.arc(5.0 / 6.0, 0, 1.0 / 6.0, pi, pi*2.0);
+		g.context.arc(loopPosition, 	0, loopRadius, Math.PI, Math.PI*2.0 + extraAngle);
+		loopPosition += (2.0 * Math.cos(extraAngle)) * loopRadius;
+		for(int i = 1; i < numLoops-1; i++) {
+			g.context.arc(loopPosition, 0, loopRadius, Math.PI - extraAngle, Math.PI*2.0 + extraAngle);
+			loopPosition += (2.0 * Math.cos(extraAngle)) * loopRadius;
+		}
+		g.context.arc(loopPosition, 	0, loopRadius, Math.PI - extraAngle, Math.PI*2.0);
 		g.context.restore();
 		CanvasGradient grad = g.context.createLinearGradient(p1.x,p1.y,p2.x,p2.y);
 		grad.addColorStop(0, getVoltageColor(g,v1).getHexValue());
@@ -495,7 +510,8 @@ public abstract class CircuitElm implements Editable {
 	static void drawThickCircle(Graphics g, Point center, double radius) {
 		g.setLineWidth(3.0);
 		g.context.beginPath();
-		g.context.arc(center.x, center.y, radius, 0, 2*pi);
+		g.context.arc(center.x, center.y, radius, 0, 2*Math.PI);
+		g.context.closePath();
 		g.context.stroke();
 	}
 

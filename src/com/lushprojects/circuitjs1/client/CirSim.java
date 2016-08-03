@@ -3296,8 +3296,8 @@ MouseOutHandler, MouseWheelHandler {
 			doMainMenuChecks();
 			contextPanel=new PopupPanel(true);
 			contextPanel.add(mainMenuBar);
-			x=Math.max(0, Math.min(e.getNativeEvent().getClientX(), cv.getCoordinateSpaceWidth()-400));
-			y=Math.max(0, Math.min(e.getNativeEvent().getClientY(),cv.getCoordinateSpaceHeight()-450));
+			x=Math.max(0, Math.min(e.getNativeEvent().getClientX(), cv.getCoordinateSpaceWidth()-475));
+			y=Math.max(0, Math.min(e.getNativeEvent().getClientY(), cv.getCoordinateSpaceHeight()-450));
 			contextPanel.setPopupPosition(x,y);
 			contextPanel.show();
 		}

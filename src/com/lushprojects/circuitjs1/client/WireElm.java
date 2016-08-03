@@ -19,6 +19,8 @@
 
 package com.lushprojects.circuitjs1.client;
 
+import com.google.gwt.canvas.dom.client.Context2d.LineCap;
+
 //import java.awt.*;
 //import java.util.StringTokenizer;
 
@@ -32,7 +34,9 @@ class WireElm extends CircuitElm {
 	static final int FLAG_SHOWVOLTAGE = 2;
 	void draw(Graphics g) {
 		setVoltageColor(g, volts[0]);
+		//g.context.setLineCap(LineCap.ROUND);
 		drawThickLine(g, point1, point2);
+		//g.context.setLineCap(LineCap.BUTT);
 		doDots(g);
 		setBbox(point1, point2, 3);
 		if (mustShowCurrent()) {

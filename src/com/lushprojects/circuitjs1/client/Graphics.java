@@ -20,6 +20,7 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.Context2d.LineCap;
 
 public class Graphics {
 
@@ -38,7 +39,7 @@ public class Graphics {
 
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
-		this.context.setTransform(zoom, 0, 0, zoom, 0.5*zoom, 0.5*zoom);		  
+		context.setTransform(zoom, 0, 0, zoom, 0.5*zoom, 0.5*zoom);		  
 	}
 
 	public void setDrawRegionScaled(Point p1, Point p2) {

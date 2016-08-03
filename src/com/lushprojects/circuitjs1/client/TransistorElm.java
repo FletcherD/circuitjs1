@@ -126,13 +126,15 @@ class TransistorElm extends CircuitElm {
 		// calc collector, emitter posts
 		coll = newPointArray(2);
 		emit = newPointArray(2);
-		interpPoint2(point1, point2, coll[0], emit[0], 1, hs2);
+		coll[0] = Point.shiftSideways(point2, point1, point2, hs2);
+		emit[0] = Point.shiftSideways(point2, point1, point2, -hs2);
+		//interpPoint2(point1, point2, coll[0], emit[0], 1, hs2);
 		// calc rectangle edges
 		rect = newPointArray(4);
 		interpPoint2(point1, point2, rect[0], rect[1], 1-16/dn, hs);
 		interpPoint2(point1, point2, rect[2], rect[3], 1-13/dn, hs);
 		// calc points where collector/emitter leads contact rectangle
-		interpPoint2(point1, point2, coll[1], emit[1], 1-13/dn, 6*dsign*pnp);
+		interpPoint2(point1, point2, coll[1], emit[1], 1-14/dn, 6*dsign*pnp);
 		// calc point where base lead contacts rectangle
 		base = new Point();
 		interpPoint (point1, point2, base, 1-16/dn);

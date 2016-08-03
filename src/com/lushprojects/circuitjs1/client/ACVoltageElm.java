@@ -1,6 +1,6 @@
 /*    
     Copyright (C) Paul Falstad and Iain Sharp
-    
+
     This file is part of CircuitJS1.
 
     CircuitJS1 is free software: you can redistribute it and/or modify
@@ -15,11 +15,11 @@
 
     You should have received a copy of the GNU General Public License
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.lushprojects.circuitjs1.client;
 
 class ACVoltageElm extends VoltageElm {
 	public ACVoltageElm(int xx, int yy) { super(xx, yy, WF_AC); }
 	Class getDumpClass() { return VoltageElm.class; }
-    }
+}

@@ -46,40 +46,42 @@ class ResistorElm extends CircuitElm {
 	}
 
 	void draw(Graphics g) {
-		int segments = 16;
-		int i;
-		int ox = 0;
-		//int hs = sim.euroResistorCheckItem.getState() ? 6 : 8;
 		int hs=6;
 		double v1 = volts[0];
 		double v2 = volts[1];
 		setBbox(point1, point2, hs);
-		draw2Leads(g);
-		setPowerColor(g, true);
-		//   double segf = 1./segments;
-		double len = Point.distance(lead1, lead2);
+		//draw2Leads(g);
 		g.context.save();
 		g.context.setLineWidth(3.0);
+
+		g.context.beginPath();
+		//setVoltageColor(g, volts[0]);
+		g.context.moveTo(point1.x, point1.y);
+		g.context.lineTo(lead1.x,  lead1.y);
+		
+		setPowerColor(g, true);
+		double len = Point.distance(lead1, lead2);
 		g.context.transform(((double)(lead2.x-lead1.x))/len, ((double)(lead2.y-lead1.y))/len, -((double)(lead2.y-lead1.y))/len,((double)(lead2.x-lead1.x))/len,lead1.x,lead1.y);
-		CanvasGradient grad = g.context.createLinearGradient(0,0,len,0);
-		grad.addColorStop(0, getVoltageColor(g,v1).getHexValue());
-		grad.addColorStop(1.0, getVoltageColor(g,v2).getHexValue());
-		g.context.setStrokeStyle(grad);
 		if (!sim.euroResistorCheckItem.getState()) {
 			// draw zigzag
-			g.context.beginPath();
-			g.context.moveTo(0,0);
-			for (i=0;i<4;i++){
+			for (int i=0; i<4; i++){
 				g.context.lineTo((1+4*i)*len/16, hs);
 				g.context.lineTo((3+4*i)*len/16, -hs);
 			}
 			g.context.lineTo(len, 0);
-			g.context.stroke();
 
 		} else    {
 			g.context.strokeRect(0, -hs, len, 2.0*hs);
 		}
 		g.context.restore();
+		//setVoltageColor(g, volts[1]);
+		CanvasGradient grad = g.context.createLinearGradient(lead1.x, lead1.y, lead2.x, lead2.y);
+		grad.addColorStop(0, getVoltageColor(g,v1).getHexValue());
+		grad.addColorStop(1.0, getVoltageColor(g,v2).getHexValue());
+		g.context.setStrokeStyle(grad);
+		g.context.lineTo(point2.x,  point2.y);
+		g.context.stroke();
+		
 		if (sim.showValuesCheckItem.getState()) {
 			String s = getShortUnitText(resistance, "\u03a9");
 			drawValues(g, s, hs + 2);

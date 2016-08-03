@@ -66,7 +66,7 @@ class OrGateElm extends GateElm {
 			g.setDrawRegionScaled(lead1, lead2);
 			double len = Point.distance(lead1, lead2);
 			g.context.beginPath();
-			g.context.arc(1.0 + 4/len, 0.0, 4/len, 0, 2*pi);
+			g.context.arc(1.0 + 4/len, 0.0, 4/len, 0, 2*Math.PI);
 			g.context.closePath();
 			g.context.restore();
 			g.context.fill();

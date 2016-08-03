@@ -67,7 +67,7 @@ class AMElm extends CircuitElm {
 		sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
 	}
 	double getVoltage() {
-		double w = 2*pi*(sim.t-freqTimeZero);
+		double w = 2*Math.PI*(sim.t-freqTimeZero);
 		return ((Math.sin(w*signalfreq)+1)/2)*Math.sin(w*carrierfreq)*maxVoltage;	
 	}
 	final double circleSize = 17;
